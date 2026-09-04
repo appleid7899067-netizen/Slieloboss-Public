@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: slieloboss-public
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    disk:
+      name: slieloboss-data
+      mountPath: /var/data
+      sizeGB: 1
