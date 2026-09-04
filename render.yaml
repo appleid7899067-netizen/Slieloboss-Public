@@ -5,6 +5,13 @@ services:
     plan: starter
     dockerfilePath: ./Dockerfile
     healthCheckPath: /
+    envVars:
+      - key: HOME
+        value: /var/data
+      - key: COW_DATA_DIR
+        value: /var/data
+      - key: AGENT_WORKSPACE
+        value: /var/data/cow
     disk:
       name: slieloboss-data
       mountPath: /var/data
