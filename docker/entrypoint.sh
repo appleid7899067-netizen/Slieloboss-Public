@@ -27,10 +27,18 @@ if [ "$CHATGPT_ON_WECHAT_PREFIX" == "" ] ; then
     CHATGPT_ON_WECHAT_PREFIX=/app
 fi
 
-# CHATGPT_ON_WECHAT_CONFIG_PATH is empty, use '/app/config.json'
+# Keep the legacy variable for compatibility, but make the mounted data root
+# the source of truth for deployments using Render Persistent Disk.
+DATA_ROOT=${COW_DATA_DIR:-/var/data}
+AGENT_WORKSPACE=${AGENT_WORKSPACE:-$DATA_ROOT/cow}
+export COW_DATA_DIR="$DATA_ROOT"
+export AGENT_WORKSPACE
+
+# CHATGPT_ON_WECHAT_CONFIG_PATH is empty, use the persistent config location.
 if [ "$CHATGPT_ON_WECHAT_CONFIG_PATH" == "" ] ; then
-    CHATGPT_ON_WECHAT_CONFIG_PATH=$CHATGPT_ON_WECHAT_PREFIX/config.json
+    CHATGPT_ON_WECHAT_CONFIG_PATH="$DATA_ROOT/config.json"
 fi
+export CHATGPT_ON_WECHAT_CONFIG_PATH
 
 # CHATGPT_ON_WECHAT_EXEC is empty, use ‘python app.py’
 if [ "$CHATGPT_ON_WECHAT_EXEC" == "" ] ; then
@@ -51,13 +59,18 @@ fi
 
 # fix ownership of mounted volumes then drop to non-root user
 if [ "$(id -u)" = "0" ]; then
-    mkdir -p /home/agent/cow "${COW_DATA_DIR:-/home/agent/.cow}"
-    chown agent:agent /home/agent/cow "${COW_DATA_DIR:-/home/agent/.cow}"
-    exec su agent -s /bin/bash -c "cd $CHATGPT_ON_WECHAT_PREFIX && $CHATGPT_ON_WECHAT_EXEC"
+    # Both config/data and the default agent workspace must be on the mounted
+    # disk. Do not copy or delete legacy data here: preserve existing files and
+    # leave any migration decision explicit and reversible.
+    mkdir -p "$DATA_ROOT" "$AGENT_WORKSPACE"
+    chown agent:agent "$DATA_ROOT" "$AGENT_WORKSPACE"
+    exec su agent -s /bin/bash -c "cd \"$CHATGPT_ON_WECHAT_PREFIX\" && $CHATGPT_ON_WECHAT_EXEC"
 fi
 
+mkdir -p "$DATA_ROOT" "$AGENT_WORKSPACE"
+
 # fallback: already running as agent
-cd $CHATGPT_ON_WECHAT_PREFIX
+cd "$CHATGPT_ON_WECHAT_PREFIX"
 $CHATGPT_ON_WECHAT_EXEC
 
 
