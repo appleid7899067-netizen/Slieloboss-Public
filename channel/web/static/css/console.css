@@ -367,8 +367,8 @@
    ===================================================================== */
 
 /* --- Test override: change chat messages background to make visual test --- */
-#chat-messages { background-color: #e6f7ff !important; }
-.dark #chat-messages { background-color: #071a2b !important; }
+#chat-messages { background-color: #fff4d6 !important; }
+.dark #chat-messages { background-color: rgba(255, 215, 0, 0.06) !important; }
 
 /* Also make the chat-main background match for the desktop renderer */
 .chat-main { background-color: transparent; }
