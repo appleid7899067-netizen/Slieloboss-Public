@@ -1,9 +1,7 @@
 FROM ghcr.io/zhayujie/chatgpt-on-wechat:latest
 
-# Render: when a persistent disk is mounted at /var/data, keep both the
-# CowAgent config/data root and ~/cow Agent workspace on that disk.
-ENV HOME=/var/data \
-    COW_DATA_DIR=/var/data \
+# Keep HOME as the container/user home; use the mounted disk only for app data.
+ENV COW_DATA_DIR=/var/data \
     AGENT_WORKSPACE=/var/data/cow
 
 ENTRYPOINT ["/entrypoint.sh"]

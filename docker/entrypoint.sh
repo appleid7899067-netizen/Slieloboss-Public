@@ -63,14 +63,24 @@ if [ "$(id -u)" = "0" ]; then
     # disk. Do not copy or delete legacy data here: preserve existing files and
     # leave any migration decision explicit and reversible.
     mkdir -p "$DATA_ROOT" "$AGENT_WORKSPACE"
+
+    # If a default config exists in the application directory and no config is
+    # present on the persistent disk, copy it so users can edit it in the disk.
+    if [ -f "$CHATGPT_ON_WECHAT_PREFIX/config.json" ] && [ ! -f "$DATA_ROOT/config.json" ]; then
+        cp "$CHATGPT_ON_WECHAT_PREFIX/config.json" "$DATA_ROOT/config.json"
+    fi
+
     chown agent:agent "$DATA_ROOT" "$AGENT_WORKSPACE"
     exec su agent -s /bin/bash -c "cd \"$CHATGPT_ON_WECHAT_PREFIX\" && $CHATGPT_ON_WECHAT_EXEC"
 fi
 
 mkdir -p "$DATA_ROOT" "$AGENT_WORKSPACE"
 
+# If not running as root (fallback), ensure there's a config in DATA_ROOT too.
+if [ -f "$CHATGPT_ON_WECHAT_PREFIX/config.json" ] && [ ! -f "$DATA_ROOT/config.json" ]; then
+    cp "$CHATGPT_ON_WECHAT_PREFIX/config.json" "$DATA_ROOT/config.json" || true
+fi
+
 # fallback: already running as agent
 cd "$CHATGPT_ON_WECHAT_PREFIX"
 $CHATGPT_ON_WECHAT_EXEC
-
-

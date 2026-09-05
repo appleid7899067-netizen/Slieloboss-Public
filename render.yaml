@@ -7,7 +7,7 @@ services:
     healthCheckPath: /
     envVars:
       - key: HOME
-        value: /var/data
+        value: /home/agent
       - key: COW_DATA_DIR
         value: /var/data
       - key: AGENT_WORKSPACE
