@@ -9,7 +9,7 @@ if (process.env.VERCEL) {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
   fs.cpSync(webDir, outDir, { recursive: true });
-  console.log(`Vercel web build copied from ${webDir} to ${outDir}`);
+  console.log(`Vercel web console build copied from ${webDir} to ${outDir}`);
 } else {
   const { execFileSync } = require('node:child_process');
   execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['vite', 'build'], {
