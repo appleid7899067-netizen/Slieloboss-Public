@@ -2,6 +2,9 @@
   "buildCommand": "npm run build:renderer && rm -rf vercel-output && cp -R dist/renderer vercel-output",
   "outputDirectory": "vercel-output",
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/config", "destination": "/api/config" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
