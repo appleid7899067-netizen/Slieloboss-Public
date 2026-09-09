@@ -1,8 +1,5 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/", "destination": "/channel/web/chat.html" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
