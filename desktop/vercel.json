@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build:renderer && rm -rf vercel-output && cp -R ../dist/renderer vercel-output",
+  "buildCommand": "npm run build:renderer && rm -rf vercel-output && cp -R dist/renderer vercel-output",
   "outputDirectory": "vercel-output",
   "cleanUrls": true,
   "headers": [
