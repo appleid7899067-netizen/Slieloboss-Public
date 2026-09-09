@@ -18,18 +18,15 @@ if (process.env.VERCEL) {
   fs.copyFileSync(path.join(webDir, 'chat.html'), path.join(outDir, 'index.html'));
   fs.cpSync(staticDir, path.join(outDir, 'assets'), { recursive: true });
 
-  // The standalone Vercel deployment has no Python backend. Expose a static
-  // JSON-compatible /config resource so the existing console can initialize
-  // without trying to parse a Vercel 404 page as JSON.
-  const configFile = path.join(desktopDir, 'config');
-  if (fs.existsSync(configFile)) {
-    fs.copyFileSync(configFile, path.join(outDir, 'config'));
-    console.log(`  config     <- ${configFile}`);
-  }
+  // IMPORTANT: do not copy a static /config file into the Vercel output.
+  // The console POSTs /config to save model/Agent settings. A static file
+  // would shadow the /config -> /api/config rewrite and make every save fail.
+  // The Vercel serverless handler at /api/config must own this route.
 
   console.log(`Vercel web console prepared at ${outDir}`);
   console.log(`  index.html <- ${path.join(webDir, 'chat.html')}`);
   console.log(`  assets/    <- ${staticDir}`);
+  console.log('  /config    -> /api/config (serverless)');
 } else {
   const { execFileSync } = require('node:child_process');
   execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['vite', 'build'], {
