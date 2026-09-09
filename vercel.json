@@ -1,6 +1,6 @@
 {
-  "buildCommand": "echo static-site",
-  "outputDirectory": ".",
+  "buildCommand": "npm run build",
+  "outputDirectory": "desktop/dist/renderer",
   "cleanUrls": true,
   "headers": [
     {
