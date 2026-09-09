@@ -2,6 +2,7 @@
   "buildCommand": "echo cowagent-web",
   "outputDirectory": "channel/web",
   "rewrites": [
+    { "source": "/config", "destination": "/api/config" },
     { "source": "/", "destination": "/chat.html" }
   ],
   "cleanUrls": true,
