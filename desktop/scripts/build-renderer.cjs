@@ -18,6 +18,15 @@ if (process.env.VERCEL) {
   fs.copyFileSync(path.join(webDir, 'chat.html'), path.join(outDir, 'index.html'));
   fs.cpSync(staticDir, path.join(outDir, 'assets'), { recursive: true });
 
+  // The standalone Vercel deployment has no Python backend. Expose a static
+  // JSON-compatible /config resource so the existing console can initialize
+  // without trying to parse a Vercel 404 page as JSON.
+  const configFile = path.join(desktopDir, 'config');
+  if (fs.existsSync(configFile)) {
+    fs.copyFileSync(configFile, path.join(outDir, 'config'));
+    console.log(`  config     <- ${configFile}`);
+  }
+
   console.log(`Vercel web console prepared at ${outDir}`);
   console.log(`  index.html <- ${path.join(webDir, 'chat.html')}`);
   console.log(`  assets/    <- ${staticDir}`);
