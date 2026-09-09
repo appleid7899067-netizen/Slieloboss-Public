@@ -6,10 +6,21 @@ const outDir = path.join(desktopDir, 'dist', 'renderer');
 
 if (process.env.VERCEL) {
   const webDir = path.resolve(desktopDir, '..', 'channel', 'web');
+  const staticDir = path.join(webDir, 'static');
+
+  // Vercel serves the renderer directory as the site root. The original
+  // CowAgent web console is normally served by the Python backend, where
+  // /assets maps to channel/web/static. Recreate that mapping for static
+  // hosting and expose chat.html as the site root.
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
-  fs.cpSync(webDir, outDir, { recursive: true });
-  console.log(`Vercel web console build copied from ${webDir} to ${outDir}`);
+
+  fs.copyFileSync(path.join(webDir, 'chat.html'), path.join(outDir, 'index.html'));
+  fs.cpSync(staticDir, path.join(outDir, 'assets'), { recursive: true });
+
+  console.log(`Vercel web console prepared at ${outDir}`);
+  console.log(`  index.html <- ${path.join(webDir, 'chat.html')}`);
+  console.log(`  assets/    <- ${staticDir}`);
 } else {
   const { execFileSync } = require('node:child_process');
   execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['vite', 'build'], {
