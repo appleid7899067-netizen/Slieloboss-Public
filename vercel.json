@@ -1,6 +1,9 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "desktop/dist/renderer",
+  "buildCommand": "echo cowagent-web",
+  "outputDirectory": "channel/web",
+  "rewrites": [
+    { "source": "/", "destination": "/chat.html" }
+  ],
   "cleanUrls": true,
   "headers": [
     {
