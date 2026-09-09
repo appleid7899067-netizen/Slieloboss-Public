@@ -1,4 +1,16 @@
 {
+  "buildCommand": "npm run build:renderer && rm -rf vercel-output && cp -R ../dist/renderer vercel-output",
+  "outputDirectory": "vercel-output",
   "cleanUrls": true,
-  "headers": [{"source":"/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"}]}]
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
 }
