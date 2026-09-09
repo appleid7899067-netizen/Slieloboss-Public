@@ -1,4 +1,6 @@
 {
+  "buildCommand": "echo static-site",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "headers": [
     {
